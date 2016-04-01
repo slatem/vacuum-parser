@@ -1,6 +1,7 @@
 require 'nokogiri'
 require_relative 'parser/version'
 require_relative 'parser/itemsearch_response'
+require_relative 'parser/itemlookup_response'
 
 module Vacuum
   class Parser
@@ -13,6 +14,8 @@ module Vacuum
       case name
       when 'ItemSearchResponse'
         ItemSearchResponse.new(document)
+      when 'ItemLookupResponse'
+        ItemLookupResponse.new(document)
       else
         ParserError.new(name + ' is not implemented!')
       end

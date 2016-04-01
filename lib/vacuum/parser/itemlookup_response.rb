@@ -68,6 +68,7 @@ module Vacuum
           attr_accessor :offer_summary
           attr_accessor :offers
           attr_accessor :browse_nodes
+          attr_accessor :customer_reviews
           def initialize(item)
             raise ParserError.new('Not a Node') unless item.is_a?(Nokogiri::XML::Node)
             @Item = item
@@ -78,7 +79,7 @@ module Vacuum
             @item_attributes = (n = @Item.at('./xmlns:ItemAttributes')) && ItemAttributes.new(n)
             @offer_summary = (n = @Item.at('./xmlns:OfferSummary')) && OfferSummary.new(n)
             @offers = (n = @Item.at('./xmlns:Offers')) && Offers.new(n)
-            @reviews = (n = @Item.at('./xmlns:CustomerReviews')) && CustomerReviews.new(n)
+            @customer_reviews = (n = @Item.at('./xmlns:CustomerReviews')) && CustomerReviews.new(n)
             @browse_nodes = (n = @Item.at('./xmlns:BrowseNode')) && BrowseNodes.new(n)
           end
 

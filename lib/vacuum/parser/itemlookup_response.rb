@@ -80,7 +80,7 @@ module Vacuum
             @offer_summary = (n = @Item.at('./xmlns:OfferSummary')) && OfferSummary.new(n)
             @offers = (n = @Item.at('./xmlns:Offers')) && Offers.new(n)
             @customer_reviews = (n = @Item.at('./xmlns:CustomerReviews')) && CustomerReviews.new(n)
-            @browse_nodes = (n = @Item.at('./xmlns:BrowseNode')) && BrowseNodes.new(n)
+            @browse_nodes = (n = @Item.at('./xmlns:BrowseNodes')) && BrowseNodes.new(n)
           end
 
           class ItemLink

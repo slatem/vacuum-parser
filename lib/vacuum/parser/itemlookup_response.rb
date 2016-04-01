@@ -10,26 +10,26 @@ module Vacuum
       end
 
       def operationRequest
-        OperationRequest.new(@Document.at('/xmlns:ItemSearchResponse/xmlns:OperationRequest'))
+        OperationRequest.new(@Document.at('/xmlns:ItemLookupResponse/xmlns:OperationRequest'))
       end
 
       def isValid?
-        (n = @Document.at('/xmlns:ItemSearchResponse/xmlns:Items/xmlns:Request/xmlns:IsValid')) &&
+        (n = @Document.at('/xmlns:ItemLookupResponse/xmlns:Items/xmlns:Request/xmlns:IsValid')) &&
             (n.content == 'True')
       end
 
       def request
-        @Document.at('/xmlns:ItemSearchResponse/xmlns:Items/xmlns:Request/xmlns:ItemLookupRequest')
+        @Document.at('/xmlns:ItemLookupResponse/xmlns:Items/xmlns:Request/xmlns:ItemLookupRequest')
       end
 
       def error
-        error = @Document.at('/xmlns:ItemSearchResponse/xmlns:Items/xmlns:Request/xmlns:Errors/xmlns:Error')
+        error = @Document.at('/xmlns:ItemLookupResponse/xmlns:Items/xmlns:Request/xmlns:Errors/xmlns:Error')
         error.content if error
       end
 
       def items
         return nil unless isValid?
-        @Items ||= Items.new(@Document.at('/xmlns:ItemSearchResponse/xmlns:Items'))
+        @Items ||= Items.new(@Document.at('/xmlns:ItemLookupResponse/xmlns:Items'))
       end
 
       class OperationRequest

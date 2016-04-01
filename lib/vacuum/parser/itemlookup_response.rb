@@ -159,7 +159,7 @@ module Vacuum
               raise ParserError.new('Not a Node') unless browse_node.is_a?(Nokogiri::XML::Node)
               @BrowseNode = browse_node
               @browse_node_id = (n = @BrowseNode.at('./xmlns:BrowseNodeId')) && n.content.to_i
-              @name = (n = @BrowseNode.at('./xmlns:Name')) && n.content.to_i
+              @name = (n = @BrowseNode.at('./xmlns:Name')) && n.content.to_s
               @ancestors ||= (@BrowseNode / './xmlns:Ancestors').inject([]) { |lst, itm| lst << Ancestors.new(itm) }
               @children ||= (@BrowseNode / './xmlns:Children').inject([]) { |lst, itm| lst << Children.new(itm) }
             end
@@ -193,8 +193,8 @@ module Vacuum
             def initialize(customer_reviews)
               raise ParserError.new('Not a Node') unless customer_reviews.is_a?(Nokogiri::XML::Node)
               @CustomerReviews = customer_reviews
-              @i_frame_url = (n = @CustomerReviews.at('./xmlns:IFrameURL')) && n.content.to_i
-              @has_reviews = (n = @CustomerReviews.at('./xmlns:HasReviews')) && n.content.to_i
+              @i_frame_url = (n = @CustomerReviews.at('./xmlns:IFrameURL')) && n.content.to_s
+              @has_reviews = (n = @CustomerReviews.at('./xmlns:HasReviews')) && n.content.to_s
             end
           end
 

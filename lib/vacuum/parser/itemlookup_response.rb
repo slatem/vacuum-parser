@@ -19,7 +19,7 @@ module Vacuum
       end
 
       def request
-        @Document.at('/xmlns:ItemSearchResponse/xmlns:Items/xmlns:Request/xmlns:ItemSearchRequest')
+        @Document.at('/xmlns:ItemSearchResponse/xmlns:Items/xmlns:Request/xmlns:ItemLookupRequest')
       end
 
       def error

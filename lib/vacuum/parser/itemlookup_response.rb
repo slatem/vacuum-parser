@@ -168,20 +168,24 @@ module Vacuum
           class Ancestors
             attr_accessor :Ancestors
             attr_accessor :browse_node
+            attr_accessor :children
             def initialize(ancestor)
               raise ParserError.new('Not a Node') unless ancestor.is_a?(Nokogiri::XML::Node)
               @Ancestors = ancestor
               @browse_node = (n = @Ancestors.at('./xmlns:BrowseNode')) && BrowseNode.new(n)
+              @children ||= (@BrowseNode / './xmlns:Children').inject([]) { |lst, itm| lst << Children.new(itm) }
             end
           end
 
           class Children
             attr_accessor :Children
             attr_accessor :browse_node
+            attr_accessor :ancestors
             def initialize(ancestor)
               raise ParserError.new('Not a Node') unless ancestor.is_a?(Nokogiri::XML::Node)
               @Children = ancestor
               @browse_node = (n = @Children.at('./xmlns:BrowseNode')) && BrowseNode.new(n)
+              @ancestors ||= (@BrowseNode / './xmlns:Ancestors').inject([]) { |lst, itm| lst << Ancestors.new(itm) }
             end
           end
 

@@ -60,77 +60,78 @@ module Vacuum
 
         class Entry
           attr_accessor :Item
-          attr_accessor :ASIN
-          attr_accessor :ParentASIN
-          attr_accessor :DetailPageURL
-          attr_accessor :ItemLinks
-          attr_accessor :ItemAttributes
-          attr_accessor :OfferSummary
-          attr_accessor :Offers
+          attr_accessor :asin
+          attr_accessor :parent_asin
+          attr_accessor :detail_page_url
+          attr_accessor :item_links
+          attr_accessor :item_attributes
+          attr_accessor :offer_summary
+          attr_accessor :offers
+          attr_accessor :browse_nodes
           def initialize(item)
             raise ParserError.new('Not a Node') unless item.is_a?(Nokogiri::XML::Node)
             @Item = item
-            @ASIN = (n = @Item.at('./xmlns:ASIN')) && n.content
-            @ParentASIN = (n = @Item.at('./xmlns:ParentASIN')) && n.content
-            @DetailPageURL = (n = @Item.at('./xmlns:DetailPageURL')) && n.content
-            @ItemLinks = (@Item / './xmlns:ItemLinks/xmlns:ItemLink').inject([]) { |lst, itm| lst << ItemLink.new(itm) }
-            @ItemAttributes = (n = @Item.at('./xmlns:ItemAttributes')) && ItemAttributes.new(n)
-            @OfferSummary = (n = @Item.at('./xmlns:OfferSummary')) && OfferSummary.new(n)
-            @Offers = (n = @Item.at('./xmlns:Offers')) && Offers.new(n)
-            @Reviews = (n = @Item.at('./xmlns:CustomerReviews')) && CustomerReviews.new(n)
-            @BrowseNodes = (n = @Item.at('./xmlns:BrowseNode')) && BrowseNodes.new(n)
+            @asin = (n = @Item.at('./xmlns:ASIN')) && n.content
+            @parent_asin = (n = @Item.at('./xmlns:ParentASIN')) && n.content
+            @detail_page_url = (n = @Item.at('./xmlns:DetailPageURL')) && n.content
+            @item_links = (@Item / './xmlns:ItemLinks/xmlns:ItemLink').inject([]) { |lst, itm| lst << ItemLink.new(itm) }
+            @item_attributes = (n = @Item.at('./xmlns:ItemAttributes')) && ItemAttributes.new(n)
+            @offer_summary = (n = @Item.at('./xmlns:OfferSummary')) && OfferSummary.new(n)
+            @offers = (n = @Item.at('./xmlns:Offers')) && Offers.new(n)
+            @reviews = (n = @Item.at('./xmlns:CustomerReviews')) && CustomerReviews.new(n)
+            @browse_nodes = (n = @Item.at('./xmlns:BrowseNode')) && BrowseNodes.new(n)
           end
 
           class ItemLink
             attr_accessor :ItemLink
-            attr_accessor :Description
-            attr_accessor :URL
+            attr_accessor :description
+            attr_accessor :url
             def initialize(item_link)
               @ItemLink = item_link
-              @Description = (n = @ItemLink.at('./xmlns:Description')) && n.content
-              @URL = (n = @ItemLink.at('./xmlns:URL')) && n.content
+              @description = (n = @ItemLink.at('./xmlns:Description')) && n.content
+              @url = (n = @ItemLink.at('./xmlns:URL')) && n.content
             end
           end
 
           class ItemAttributes
             attr_accessor :ItemAttributes
-            attr_accessor :Brand
-            attr_accessor :Manufacturer
-            attr_accessor :Model
-            attr_accessor :PartNumber
-            attr_accessor :ProductGroup
-            attr_accessor :Size
-            attr_accessor :Title
+            attr_accessor :brand
+            attr_accessor :manufacturer
+            attr_accessor :model
+            attr_accessor :part_number
+            attr_accessor :product_group
+            attr_accessor :size
+            attr_accessor :title
             def initialize(item_attributes)
               @ItemAttributes = item_attributes
-              @Brand = (n = @ItemAttributes.at('./xmlns:Brand')) && n.content
-              @Manufacturer = (n = @ItemAttributes.at('./xmlns:Manufacturer')) && n.content
-              @Model = (n = @ItemAttributes.at('./xmlns:Model')) && n.content
-              @PartNumber = (n = @ItemAttributes.at('./xmlns:PartNumber')) && n.content
-              @ProductGroup = (n = @ItemAttributes.at('./xmlns:ProductGroup')) && n.content
-              @Size = (n = @ItemAttributes.at('./xmlns:Size')) && n.content
-              @Title = (n = @ItemAttributes.at('./xmlns:Title')) && n.content
+              @brand = (n = @ItemAttributes.at('./xmlns:Brand')) && n.content
+              @manufacturer = (n = @ItemAttributes.at('./xmlns:Manufacturer')) && n.content
+              @model = (n = @ItemAttributes.at('./xmlns:Model')) && n.content
+              @part_number = (n = @ItemAttributes.at('./xmlns:PartNumber')) && n.content
+              @product_group = (n = @ItemAttributes.at('./xmlns:ProductGroup')) && n.content
+              @size = (n = @ItemAttributes.at('./xmlns:Size')) && n.content
+              @title = (n = @ItemAttributes.at('./xmlns:Title')) && n.content
             end
           end
 
           class OfferSummary
             attr_accessor :OfferSummary
-            attr_accessor :LowestNewPrice
-            attr_accessor :LowestUsedPrice
-            attr_accessor :LowestRefurbishedPrice
-            attr_accessor :TotalNew
-            attr_accessor :TotalUsed
-            attr_accessor :TotalCollectible
-            attr_accessor :TotalRefurbished
+            attr_accessor :lowest_new_price
+            attr_accessor :lowest_used_price
+            attr_accessor :lowest_refurbished_price
+            attr_accessor :total_new
+            attr_accessor :total_used
+            attr_accessor :total_collectible
+            attr_accessor :total_refurbished
             def initialize(offer_summary)
               @OfferSummary = offer_summary
-              @LowestNewPrice = (n = @OfferSummary.at('./xmlns:LowestNewPrice')) && Price.new(n)
-              @LowestUsedPrice = (n = @OfferSummary.at('./xmlns:LowestUsedPrice')) && Price.new(n)
-              @LowestRefurbishedPrice = (n = @OfferSummary.at('./xmlns:LowestRefurbishedPrice')) && Price.new(n)
-              @TotalNew = (n = @OfferSummary.at('./xmlns:TotalNew')) && n.content.to_i
-              @TotalUsed = (n = @OfferSummary.at('./xmlns:TotalUsed')) && n.content.to_i
-              @TotalCollectible = (n = @OfferSummary.at('./xmlns:TotalCollectible')) && n.content.to_i
-              @TotalRefurbished = (n = @OfferSummary.at('./xmlns:TotalRefurbished')) && n.content.to_i
+              @lowest_new_price = (n = @OfferSummary.at('./xmlns:LowestNewPrice')) && Price.new(n)
+              @lowest_used_price = (n = @OfferSummary.at('./xmlns:LowestUsedPrice')) && Price.new(n)
+              @lowest_refurbished_price = (n = @OfferSummary.at('./xmlns:LowestRefurbishedPrice')) && Price.new(n)
+              @total_new = (n = @OfferSummary.at('./xmlns:TotalNew')) && n.content.to_i
+              @total_used = (n = @OfferSummary.at('./xmlns:TotalUsed')) && n.content.to_i
+              @total_collectible = (n = @OfferSummary.at('./xmlns:TotalCollectible')) && n.content.to_i
+              @total_refurbished = (n = @OfferSummary.at('./xmlns:TotalRefurbished')) && n.content.to_i
             end
           end
 
@@ -149,50 +150,50 @@ module Vacuum
 
           class BrowseNode
             attr_accessor :BrowseNode
-            attr_accessor :BrowseNodeId
-            attr_accessor :Name
-            attr_accessor :Ancestors
-            attr_accessor :Children
+            attr_accessor :browse_node_id
+            attr_accessor :name
+            attr_accessor :ancestors
+            attr_accessor :children
             def initialize(browse_node)
               raise ParserError.new('Not a Node') unless browse_node.is_a?(Nokogiri::XML::Node)
               @BrowseNode = browse_node
-              @BrowseNodeId = (n = @BrowseNode.at('./xmlns:BrowseNodeId')) && n.content.to_i
-              @Name = (n = @BrowseNode.at('./xmlns:Name')) && n.content.to_i
-              @Ancestors ||= (@BrowseNode / './xmlns:Ancestors').inject([]) { |lst, itm| lst << Ancestors.new(itm) }
-              @Children ||= (@BrowseNode / './xmlns:Children').inject([]) { |lst, itm| lst << Children.new(itm) }
+              @browse_node_id = (n = @BrowseNode.at('./xmlns:BrowseNodeId')) && n.content.to_i
+              @name = (n = @BrowseNode.at('./xmlns:Name')) && n.content.to_i
+              @ancestors ||= (@BrowseNode / './xmlns:Ancestors').inject([]) { |lst, itm| lst << Ancestors.new(itm) }
+              @children ||= (@BrowseNode / './xmlns:Children').inject([]) { |lst, itm| lst << Children.new(itm) }
             end
           end
 
           class Ancestors
             attr_accessor :Ancestors
-            attr_accessor :BrowseNode
+            attr_accessor :browse_node
             def initialize(ancestor)
               raise ParserError.new('Not a Node') unless ancestor.is_a?(Nokogiri::XML::Node)
               @Ancestors = ancestor
-              @BrowseNode = (n = @Ancestors.at('./xmlns:BrowseNode')) && BrowseNode.new(n)
+              @browse_node = (n = @Ancestors.at('./xmlns:BrowseNode')) && BrowseNode.new(n)
             end
           end
 
           class Children
             attr_accessor :Children
-            attr_accessor :BrowseNode
+            attr_accessor :browse_node
             def initialize(ancestor)
               raise ParserError.new('Not a Node') unless ancestor.is_a?(Nokogiri::XML::Node)
               @Children = ancestor
-              @BrowseNode = (n = @Children.at('./xmlns:BrowseNode')) && BrowseNode.new(n)
+              @browse_node = (n = @Children.at('./xmlns:BrowseNode')) && BrowseNode.new(n)
             end
           end
 
           class CustomerReviews
             attr_accessor :CustomerReviews
-            attr_accessor :IFrameURL
-            attr_accessor :HasReviews
+            attr_accessor :i_frame_url
+            attr_accessor :has_reviews
 
             def initialize(customer_reviews)
               raise ParserError.new('Not a Node') unless customer_reviews.is_a?(Nokogiri::XML::Node)
               @CustomerReviews = customer_reviews
-              @IFrameURL = (n = @CustomerReviews.at('./xmlns:IFrameURL')) && n.content.to_i
-              @HasReviews = (n = @CustomerReviews.at('./xmlns:HasReviews')) && n.content.to_i
+              @i_frame_url = (n = @CustomerReviews.at('./xmlns:IFrameURL')) && n.content.to_i
+              @has_reviews = (n = @CustomerReviews.at('./xmlns:HasReviews')) && n.content.to_i
             end
           end
 
@@ -218,16 +219,16 @@ module Vacuum
           end
 
           class Price
-            attr_accessor :Price
-            attr_accessor :Amount
-            attr_accessor :CurrencyCode
-            attr_accessor :FormattedPrice
+            attr_accessor :price
+            attr_accessor :amount
+            attr_accessor :currency_code
+            attr_accessor :formatted_price
             def initialize(price)
               raise ParserError.new('Not a Node') unless price.is_a?(Nokogiri::XML::Node)
-              @Price = price
-              @Amount = (n = @Price.at('./xmlns:Amount')) && n.content.to_i
-              @CurrencyCode = (n = @Price.at('./xmlns:CurrencyCode')) && n.content.to_sym
-              @FormattedPrice = (n = @Price.at('./xmlns:FormattedPrice')) && n.content
+              @price = price
+              @amount = (n = @price.at('./xmlns:Amount')) && n.content.to_i
+              @currency_code = (n = @price.at('./xmlns:CurrencyCode')) && n.content.to_sym
+              @formatted_price = (n = @price.at('./xmlns:FormattedPrice')) && n.content
             end
           end
         end

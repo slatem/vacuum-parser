@@ -69,18 +69,35 @@ module Vacuum
           attr_accessor :offers
           attr_accessor :browse_nodes
           attr_accessor :customer_reviews
+          attr_accessor :sales_rank
+          attr_accessor :list
+          attr_accessor :large_image
+
           def initialize(item)
             raise ParserError.new('Not a Node') unless item.is_a?(Nokogiri::XML::Node)
             @Item = item
             @asin = (n = @Item.at('./xmlns:ASIN')) && n.content
             @parent_asin = (n = @Item.at('./xmlns:ParentASIN')) && n.content
             @detail_page_url = (n = @Item.at('./xmlns:DetailPageURL')) && n.content
+            @sales_rank = (n = @Item.at('./xmlns:SalesRank')) && n.content
             @item_links = (@Item / './xmlns:ItemLinks/xmlns:ItemLink').inject([]) { |lst, itm| lst << ItemLink.new(itm) }
             @item_attributes = (n = @Item.at('./xmlns:ItemAttributes')) && ItemAttributes.new(n)
             @offer_summary = (n = @Item.at('./xmlns:OfferSummary')) && OfferSummary.new(n)
             @offers = (n = @Item.at('./xmlns:Offers')) && Offers.new(n)
             @customer_reviews = (n = @Item.at('./xmlns:CustomerReviews')) && CustomerReviews.new(n)
             @browse_nodes = (n = @Item.at('./xmlns:BrowseNodes')) && BrowseNodes.new(n)
+            @list = (n = @Item.at('./xmlns:List')) && List.new(n)
+            @large_image = (n = @Item.at('./xmlns:LargeImage//xmlns:URL')) && n.content
+          end
+
+          class List
+            attr_accessor :List
+            attr_accessor :date_created
+
+            def initialize(item)
+              @List = item
+              @date_created = (n = @List.at('./xmlns:DateCreated')) && n.content
+            end
           end
 
           class ItemLink
@@ -103,6 +120,10 @@ module Vacuum
             attr_accessor :product_group
             attr_accessor :size
             attr_accessor :title
+            attr_accessor :upc
+            attr_accessor :item_dimensions
+            attr_accessor :list_price
+
             def initialize(item_attributes)
               @ItemAttributes = item_attributes
               @brand = (n = @ItemAttributes.at('./xmlns:Brand')) && n.content
@@ -112,6 +133,30 @@ module Vacuum
               @product_group = (n = @ItemAttributes.at('./xmlns:ProductGroup')) && n.content
               @size = (n = @ItemAttributes.at('./xmlns:Size')) && n.content
               @title = (n = @ItemAttributes.at('./xmlns:Title')) && n.content
+              @upc = (n = @ItemAttributes.at('./xmlns:UPC')) && n.content
+              @list_price = (n = @ItemAttributes.at('./xmlns:ListPrice')) && n.content
+              @item_dimensions = (n = @ItemAttributes.at('./xmlns:ItemDimensions')) && ItemDimensions.new(n)
+            end
+
+            class ItemDimensions
+              attr_accessor :ItemDimensions, :height, :weight, :width, :length, :units
+              def initialize(item)
+                @ItemDimensions = item
+                @height = dimension((n = @ItemDimensions.at('./xmlns:Height')))
+                @length = dimension((n = @ItemDimensions.at('./xmlns:Length')))
+                @width = dimension((n = @ItemDimensions.at('./xmlns:Width')))
+                @weight =dimension((n = @ItemDimensions.at('./xmlns:Weight')))
+              end
+
+              def dimension(dim)
+                amount = dim.at('./xmlns:__content__')
+                units = dim.at('./xmlns:Units')
+                if units == "hundredths-inches" || units == "hundredths-pounds"
+                  amount.to_i / 100.0
+                else
+                  amount.to_i / 1.0
+                end
+              end
             end
           end
 
@@ -173,7 +218,7 @@ module Vacuum
               raise ParserError.new('Not a Node') unless ancestor.is_a?(Nokogiri::XML::Node)
               @Ancestors = ancestor
               @browse_node = (n = @Ancestors.at('./xmlns:BrowseNode')) && BrowseNode.new(n)
-              @children ||= (@BrowseNode / './xmlns:Children').inject([]) { |lst, itm| lst << Children.new(itm) }
+              @children ||= (@Ancestors / './xmlns:Children').inject([]) { |lst, itm| lst << Children.new(itm) }
             end
           end
 
@@ -185,7 +230,7 @@ module Vacuum
               raise ParserError.new('Not a Node') unless ancestor.is_a?(Nokogiri::XML::Node)
               @Children = ancestor
               @browse_node = (n = @Children.at('./xmlns:BrowseNode')) && BrowseNode.new(n)
-              @ancestors ||= (@BrowseNode / './xmlns:Ancestors').inject([]) { |lst, itm| lst << Ancestors.new(itm) }
+              @ancestors ||= (@Children / './xmlns:Ancestors').inject([]) { |lst, itm| lst << Ancestors.new(itm) }
             end
           end
 

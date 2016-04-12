@@ -49,8 +49,8 @@ module Vacuum
         def initialize(items)
           raise ParserError.new('Not a Node') unless items.is_a?(Nokogiri::XML::Node)
           @Items = items
-          @TotalResults = @Items.at('./xmlns:TotalResults').content.to_i
-          @error = @Items.at('./xmlns:Request:Errors:Error').present? ? true : false
+          #@TotalResults = @Items.at('./xmlns:TotalResults').content.to_i
+          @error = @Items.at('./xmlns:Request/xmlns:Errors/xmlns:Error').present? ? true : false
           #@TotalPages = @Items.at('./xmlns:TotalPages').content.to_i
           #@MoreSearchResultsUrl = @Items.at('./xmlns:MoreSearchResultsUrl').content
         end

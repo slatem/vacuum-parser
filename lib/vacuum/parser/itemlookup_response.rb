@@ -134,7 +134,7 @@ module Vacuum
               @size = (n = @ItemAttributes.at('./xmlns:Size')) && n.content
               @title = (n = @ItemAttributes.at('./xmlns:Title')) && n.content
               @upc = (n = @ItemAttributes.at('./xmlns:UPC')) && n.content
-              @list_price = (n = @ItemAttributes.at('./xmlns:ListPrice')) && n.content
+              @list_price = (n = @ItemAttributes.at('./xmlns:ListPrice/xmlns:Amount')) && n.content
               @item_dimensions = (n = @ItemAttributes.at('./xmlns:ItemDimensions')) && ItemDimensions.new(n)
             end
 

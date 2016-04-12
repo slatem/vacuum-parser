@@ -142,15 +142,15 @@ module Vacuum
               attr_accessor :ItemDimensions, :height, :weight, :width, :length, :units
               def initialize(item)
                 @ItemDimensions = item
-                @height = dimension((n = @ItemDimensions.at('./xmlns:Height')))
-                @length = dimension((n = @ItemDimensions.at('./xmlns:Length')))
-                @width = dimension((n = @ItemDimensions.at('./xmlns:Width')))
-                @weight =dimension((n = @ItemDimensions.at('./xmlns:Weight')))
+                @height = dimension(@ItemDimensions.at('./xmlns:Height'))
+                @length = dimension(@ItemDimensions.at('./xmlns:Length'))
+                @width = dimension(@ItemDimensions.at('./xmlns:Width'))
+                @weight = dimension(@ItemDimensions.at('./xmlns:Weight'))
               end
 
               def dimension(dim)
-                amount = dim.at('./xmlns:__content__')
-                units = dim.at('./xmlns:Units')
+                amount = dim.content
+                units = dim.attribute('Units').content
                 if units == "hundredths-inches" || units == "hundredths-pounds"
                   amount.to_i / 100.0
                 else

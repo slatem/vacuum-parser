@@ -44,11 +44,13 @@ module Vacuum
         attr_accessor :TotalResults
         attr_accessor :TotalPages
         attr_accessor :MoreSearchResultsUrl
+        attr_accessor :error
 
         def initialize(items)
           raise ParserError.new('Not a Node') unless items.is_a?(Nokogiri::XML::Node)
           @Items = items
-          #@TotalResults = @Items.at('./xmlns:TotalResults').content.to_i
+          @TotalResults = @Items.at('./xmlns:TotalResults').content.to_i
+          @error = @Items.at('./xmlns:Request:Errors:Error').present? ? true : false
           #@TotalPages = @Items.at('./xmlns:TotalPages').content.to_i
           #@MoreSearchResultsUrl = @Items.at('./xmlns:MoreSearchResultsUrl').content
         end

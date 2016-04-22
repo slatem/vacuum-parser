@@ -151,6 +151,7 @@ module Vacuum
               end
 
               def dimension(dim)
+                return nil if dim.nil?
                 amount = dim.content
                 units = dim.attribute('Units').content
                 if units == "hundredths-inches" || units == "hundredths-pounds"

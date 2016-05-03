@@ -6,7 +6,7 @@ module Vacuum
       def initialize(document)
         raise ParserError.new('Not a XML::Document') unless document.is_a?(Nokogiri::XML::Document)
         @Document = document
-        raise ParserError.new('Not a ItemSearchResponse') if document.root.name != 'ItemSearchResponse'
+        raise ParserError.new('Not a BrowseNodeLookupResponse') if document.root.name != 'BrowseNodeLookupResponse'
       end
 
       def operationRequest

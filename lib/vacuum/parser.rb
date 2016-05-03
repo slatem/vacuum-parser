@@ -2,6 +2,7 @@ require 'nokogiri'
 require_relative 'parser/version'
 require_relative 'parser/itemsearch_response'
 require_relative 'parser/itemlookup_response'
+require_relative 'parser/browsenode_response'
 
 module Vacuum
   class Parser

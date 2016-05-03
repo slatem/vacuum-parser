@@ -16,6 +16,8 @@ module Vacuum
         ItemSearchResponse.new(document)
       when 'ItemLookupResponse'
         ItemLookupResponse.new(document)
+      when 'BrowseNodeLookupResponse'
+        BrowseNodeResponse.new(document)
       else
         ParserError.new(name + ' is not implemented!')
       end

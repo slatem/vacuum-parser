@@ -14,8 +14,7 @@ module Vacuum
       end
 
       def isValid?
-        (n = @Document.at('/xmlns:BrowseNodeLookupResponse/xmlns:Items/xmlns:Request/xmlns:IsValid')) &&
-            (n.content == 'True')
+        @Document.at('/xmlns:BrowseNodeLookupResponse/xmlns:BrowseNodes').present?
       end
 
       def request
